@@ -1,16 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <ul>
+    <li v-for="item in repoList" :key="item.id">{{item.name}}</li>
+  </ul>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { getRepo } from '@/api';
+import { defineComponent, reactive } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     HelloWorld
+  },
+  setup() {
+    const repoList = reactive([]);
+    getRepo().then(data=> {
+      repoList.push(...(<[]>data.data))
+    })
+    return {
+      repoList: repoList,
+    }
   }
 })
 </script>
