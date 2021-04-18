@@ -1,12 +1,13 @@
 <template>
   <ul>
-    <li v-for="item in repoList" :key="item.id">{{item.name}}</li>
+    <div v-for="item in repoList" :key="item.id" href @click="handleClick(item)">{{item.name}}</div>
   </ul>
+  <div v-html="detail"></div>
 </template>
 
 <script lang="ts">
-import { getRepo } from '@/api';
-import { defineComponent, reactive } from 'vue'
+import { getRepo, getDetail } from '@/api';
+import { defineComponent, reactive, ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 
 export default defineComponent({
@@ -16,11 +17,19 @@ export default defineComponent({
   },
   setup() {
     const repoList = reactive([]);
+    let detail = ref();
     getRepo().then(data=> {
       repoList.push(...(<[]>data.data))
     })
+
+    async function handleClick(data: any) {
+      const res = await getDetail(data.name);
+      detail.value = res.data
+    }
     return {
       repoList: repoList,
+      handleClick,
+      detail,
     }
   }
 })
