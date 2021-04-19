@@ -10,7 +10,7 @@ export function getRepo() {
 export function getDetail(name: string) {
   return request({
     headers: {
-      accept: 'application/vnd.github.VERSION.html'
+      accept: 'application/vnd.github.VERSION.html+json'
     },
     url: `/repos/SepVeneto/SepVeneto.github.io/contents/${name}?ref=articles`,
     method: 'get',
