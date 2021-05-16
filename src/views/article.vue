@@ -1,19 +1,24 @@
 <template>
-  <div v-html="detail" style="width: 1000px; margin: 0 auto"></div>
+  <div class="markdown-body" v-html="detail" style="width: 1000px; margin: 0 auto"></div>
 </template>
 
 <script lang="ts">
-import { getDetail } from '@/api';
+import { getDetail, markdown2html } from '@/api';
 import { useRoute } from 'vue-router'
 import { defineComponent, ref } from 'vue'
+import 'github-markdown-css'
 
 export default defineComponent({
   name: 'article-detail',
   setup() {
     const route = useRoute();
-    const { name } = route.query;
+    const { issuesNumber } = route.query;
     const detail = ref();
-    getDetail(<string>name).then(({ data }) => {
+    getDetail(<string>issuesNumber).then(({ data }) => {
+      return data;
+    }).then(data => {
+      return markdown2html(data.body)
+    }).then(({ data }) => {
       detail.value = data;
     })
     return {
