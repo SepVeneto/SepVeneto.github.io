@@ -1,1 +1,0 @@
-import{a as e}from"./index.f810c660.js";import{d as a,a as t,e as n,o as r,c as i}from"./index.f5811eef.js";var d=a({name:"article-detail",setup(){const a=n(),{name:r}=a.query,i=t();return e(r).then((({data:e})=>{i.value=e})),{detail:i}}});d.render=function(e,a){return r(),i("div",{innerHTML:e.detail,style:{width:"1000px",margin:"0 auto"}},null,8,["innerHTML"])};export default d;
