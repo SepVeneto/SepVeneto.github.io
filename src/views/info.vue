@@ -3,7 +3,7 @@
     <div class="info-avatar">
       <img :src="info.avatar_url">
     </div>
-    <div>{{info.name}}</div>
+    <div>{{ info.name }}</div>
   </div>
 </template>
 

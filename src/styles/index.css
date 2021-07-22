@@ -5,6 +5,10 @@ html {
 body {
   background-color: #f7f7f7;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+}
 .container {
   display: flex;
   max-width: 1344px;

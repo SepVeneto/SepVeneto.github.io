@@ -1,6 +1,6 @@
 <template>
   <div class="bc-row">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'bc-row',
+  name: 'BcRow',
   setup() {
     
   },

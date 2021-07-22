@@ -1,6 +1,6 @@
 <template>
   <section class="bc-container">
-    <slot></slot>
+    <slot />
   </section>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'bc-container',
+  name: 'BcContainer',
   setup() {
     
   },
