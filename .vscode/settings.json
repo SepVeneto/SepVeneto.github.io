@@ -1,5 +1,6 @@
 {
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src/"
-  }
+  },
+  "liveServer.settings.port": 5501
 }
