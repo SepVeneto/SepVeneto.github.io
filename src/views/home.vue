@@ -1,45 +1,37 @@
 <template>
-  <bc-container class="container">
-    <bc-col :span="6">
-      <info :data="userInfo" />
-    </bc-col>
-    <bc-col :span="12">
-      <ul class="article-list card">
-        <div
-          class="list-item"
-          v-for="item in repoList"
-          :key="item.id"
-          @click="handleClick(item)"
-        >
-          <span>{{item.title}}</span>
-          <span>{{item.created_at}}</span>
-        </div>
-      </ul>
-    </bc-col>
-  </bc-container>
+  <section class="home-container">
+    <ul class="article-list">
+      <li
+        v-for="item in repoList"
+        :key="item.id"
+        class="card"
+        @click="handleClick(item)"
+      >
+        <div>{{ formatTime(item.created_at) }}</div>
+        <div>{{ item.title }}</div>
+      </li>
+    </ul>
+    <aside class="right-aside">
+      <div class="card">最近</div>
+      <div class="card">档案</div>
+    </aside>
+  </section>
 </template>
 
 <script lang="ts">
-import { getRepo, getUserInfo } from '@/api';
+import { getRepo } from '@/api';
 import { defineComponent, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router';
-import info from './info.vue';
+import { formatTime } from '@/utils/tools';
 
 export default defineComponent({
-  name: 'home',
-  components: {
-    info,
-  },
+  name: 'Home',
   setup() {
     const router = useRouter();
     const repoList = reactive([]);
     const detail = ref();
-    const userInfo = reactive({});
     getRepo().then(data => {
-      repoList.push(...(<[]>data.data))
-    })
-    getUserInfo().then(({ data }) => {
-      Object.assign(userInfo, data);
+      repoList.push(...(data.data as []))
     })
 
     function handleClick(data: any) {
@@ -54,18 +46,31 @@ export default defineComponent({
       repoList: repoList,
       handleClick,
       detail,
-      userInfo,
+
+      formatTime,
     }
   },
 })
 </script>
 
-<style scoped>
-.container {
-  max-width: 1200px;
+<style scoped lang="scss">
+.home-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 250px;
+  row-gap: 20px;
+  column-gap: 20px;
+  .right-aside {
+    display: grid;
+    row-gap: 20px;
+  }
 }
 .article-list {
-  width: 50%;
+  display: grid;
+  row-gap: 20px;
+}
+.container {
+  max-width: 1200px;
 }
 .list-item {
   cursor: pointer;

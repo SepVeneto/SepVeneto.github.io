@@ -7,7 +7,17 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   build: {
-    outDir: 'docs'
+    outDir: 'docs',
+    rollupOptions: {
+      external: ['vue', 'vue-router', 'three'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          'vue-router': 'VueRouter',
+          three: 'THREE',
+        }
+      }
+    }
   },
   resolve: {
     alias: {

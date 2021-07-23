@@ -1,10 +1,10 @@
-import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    // component: () => import('@/views/home.vue'),
-    redirect: '/room',
+    component: () => import('@/views/home.vue'),
+    // redirect: '/room',
   },
   {
     path: '/room',
@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 

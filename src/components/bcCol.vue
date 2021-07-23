@@ -31,3 +31,8 @@ export default defineComponent({
 })
 </script>
 
+<style lang="scss" scoped>
+.bc-col {
+  display: inline-block;
+}
+</style>

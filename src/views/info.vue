@@ -4,6 +4,11 @@
       <img :src="info.avatar_url">
     </div>
     <div>{{ info.name }}</div>
+    <div class="info-detail">
+      <div><span>文章</span><span>39</span></div>
+      <div><span>分类</span><span>9</span></div>
+      <div><span>仓库</span><span>{{ info.public_repos }}</span></div>
+    </div>
   </div>
 </template>
 
@@ -19,6 +24,7 @@ export default defineComponent({
   },
   setup(props) {
     const info = reactive(props.data);
+    // console.log(info)
     return {
       info,
     }
@@ -26,8 +32,21 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .info-detail {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    span {
+      display: block;
+      text-align: center;
+    }
+  }
 }
 .info-container .info-avatar {
   width: 100px;
