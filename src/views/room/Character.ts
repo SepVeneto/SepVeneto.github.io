@@ -1,4 +1,5 @@
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GUIController } from 'dat.gui';
 import * as THREE from 'three';
 
 type Action = {
@@ -11,8 +12,9 @@ export type AdditiveActions = 'sneak_pose' | 'sad_pose' | 'agree' | 'headShake';
 export type AllActions = BaseActions | AdditiveActions;
 
 export class Character {
-  public currentBaseAction: AllActions;
-  private model: THREE.Group;
+  private _currentBaseAction: AllActions;
+  private crossFadeControls: GUIController[];
+  private _model: THREE.Group;
   private skeleton: THREE.SkeletonHelper;
   private mixer: THREE.AnimationMixer;
   private gltf: GLTF;
@@ -20,14 +22,14 @@ export class Character {
   private additiveActions: Record<AdditiveActions, Action>;
   private allActions: THREE.AnimationAction[];
   constructor(gltf: GLTF) {
-    this.currentBaseAction = 'idle';
+    this._currentBaseAction = 'idle';
     this.gltf = gltf;
-    this.model = gltf.scene;
+    this._model = gltf.scene;
 
-    this.skeleton = new THREE.SkeletonHelper(this.model);
+    this.skeleton = new THREE.SkeletonHelper(this._model);
     this.skeleton.visible = false;
 
-    this.mixer = new THREE.AnimationMixer(this.model);
+    this.mixer = new THREE.AnimationMixer(this._model);
     this.baseActions = {
       idle: { weight: 1 },
       walk: { weight: 0 },
@@ -40,16 +42,30 @@ export class Character {
       headShake: { weight: 0 },
     }
     this.allActions = [];
+    this.crossFadeControls = [];
     this.setShadow();
     this.generateActions();
   }
+  get currentBaseAction(): AllActions{
+    return this._currentBaseAction;
+  }
+  set currentBaseAction(action: AllActions) {
+    if (action === this._currentBaseAction) {
+      return;
+    }
+    this.switchAction(action, 0.35);
+    this._currentBaseAction = action;
+  }
+  get model(): THREE.Group {
+    return this._model;
+  }
   setShadow(): void {
-    this.model.traverse(object => {
+    this._model.traverse(object => {
       if ( (object as THREE.Object3D & THREE.SkinnedMesh).isMesh ) object.castShadow = true;
     })
   }
   bindToScene(scene: THREE.Scene): void {
-    scene.add(this.model);
+    scene.add(this._model);
     scene.add(this.skeleton);
   }
   generateActions(): void {
@@ -135,10 +151,39 @@ export class Character {
     return this.baseActions;
   }
   getActionSetting(actionName?: AllActions): Action {
-    const name = actionName || this.currentBaseAction;
+    const name = actionName || this._currentBaseAction;
     return this.baseActions[name as BaseActions] || this.additiveActions[name as AdditiveActions];
   }
   getAdditiveActions(): Record<AdditiveActions, Action> {
     return this.additiveActions;
+  }
+  switchAction(name: AllActions, duration: number): void {
+    const currentAction = this.getActionSetting().action || null;
+    const targetAction = this.getActionSetting(name).action || null;
+    console.log(name)
+    if (this._currentBaseAction === 'idle' || !currentAction || !targetAction) {
+      this.executeCrossFade(currentAction, targetAction, duration);
+    } else {
+      this.synchronizeCrossFade(currentAction, targetAction, duration);
+    }
+
+    if (targetAction) {
+      const clip = targetAction.getClip();
+      this._currentBaseAction = clip.name as AllActions
+    } else {
+      this._currentBaseAction = 'idle';
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.crossFadeControls.forEach((control: any) => {
+      const name = control.property;
+      if (name === this._currentBaseAction) {
+        control.setActive();
+      } else {
+        control.setInactive();
+      }
+    })
+  }
+  setControls(controls: GUIController[]): void {
+    this.crossFadeControls = controls;
   }
 }

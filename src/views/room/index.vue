@@ -30,7 +30,6 @@ export default defineComponent({
     let camera: THREE.PerspectiveCamera;
     let stats: Stats;
     let panelSettings: Record<string, unknown>;
-    let model: THREE.Group;
     let character: Character;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,6 +72,9 @@ export default defineComponent({
       character = new Character(gltf);
       character.bindToScene(scene);
       // character.generateActions();
+
+      const temp = new Character(await loadModel('/static/Xbot.glb'));
+      temp.bindToScene(scene);
 
       renderer = new Three.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio)
@@ -124,46 +126,37 @@ export default defineComponent({
 
     function keyOperate(code: number, action: 'down' | 'up') {
       const key = keyMap[code];
-      const startAction = character.getActionSetting().action || null;
       switch (key) {
         case 'w':
           if (action === 'down') {
-            const endAction = character.getActionSetting('walk').action || null;
-            character.currentBaseAction != 'walk' && prepareCrossFade(startAction, endAction, 0.35);
-            model.position.x += 0.01;
+            character.currentBaseAction = 'walk';
+            character.model.position.z += 0.05;
           } else if (action === 'up') {
-            const endAction = character.getActionSetting('idle').action || null;
-            prepareCrossFade(startAction, endAction, 0.35);
+            character.currentBaseAction = 'idle';
           }
           break;
         case 'a':
           if (action === 'down') {
-            const endAction = character.getActionSetting('walk').action || null;
-            character.currentBaseAction != 'walk' && prepareCrossFade(startAction, endAction, 0.35);
-            model.position.z -= 0.01;
+            character.currentBaseAction = 'walk';
+            character.model.position.x = 0.05;
           } else if (action === 'up') {
-            const endAction = character.getActionSetting('idle').action || null;
-            prepareCrossFade(startAction, endAction, 0.35);
+            character.currentBaseAction = 'idle';
           }
           break;
         case 's':
           if (action === 'down') {
-            const endAction = character.getActionSetting('walk').action || null;
-            character.currentBaseAction != 'walk' && prepareCrossFade(startAction, endAction, 0.35);
-            model.position.x -= 0.01;
+            character.currentBaseAction = 'walk';
+            character.model.position.z -= 0.05;
           } else if (action === 'up') {
-            const endAction = character.getActionSetting('idle').action || null;
-            prepareCrossFade(startAction, endAction, 0.35);
+            character.currentBaseAction = 'idle';
           }
           break;
         case 'd':
           if (action === 'down') {
-            const endAction = character.getActionSetting('walk').action || null;
-            character.currentBaseAction != 'walk' && prepareCrossFade(startAction, endAction, 0.35);
-            model.position.z += 0.01;
+            character.currentBaseAction = 'walk';
+            character.model.position.x -= 0.05;
           } else if (action === 'up') {
-            const endAction = character.getActionSetting('idle').action || null;
-            prepareCrossFade(startAction, endAction, 0.35);
+            character.currentBaseAction = 'idle';
           }
           break;
       }
@@ -194,6 +187,7 @@ export default defineComponent({
         panelSettings[name] = function() {
           const currentSettings = character.getActionSetting();
           const currentAction = currentSettings.action || null;
+          console.log(name)
           const action = settings?.action || null;
 
           prepareCrossFade(currentAction, action, 0.35);
@@ -235,6 +229,7 @@ export default defineComponent({
           control.setInactive();
         }
       })
+      character.setControls(crossFadeControls)
     }
 
     function prepareCrossFade(
