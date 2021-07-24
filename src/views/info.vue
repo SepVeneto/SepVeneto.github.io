@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   props: {
@@ -23,7 +23,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const info = reactive(props.data);
+    const info = ref({});
+    watch(() => props.data, (val) => {
+      info.value = val;
+    })
     // console.log(info)
     return {
       info,

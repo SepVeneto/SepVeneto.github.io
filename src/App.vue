@@ -4,13 +4,20 @@
       <info :data="userInfo" />
       <div class="card">分类</div>
     </aside>
-    <router-view />
+    <section style="position: relative">
+      <router-view v-slot="{ Component, route }" class="child-view">
+        <transition :name="route.meta.transition">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </section>
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive} from 'vue'
-import { getUserInfo } from '@/api';
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex';
+import { State } from '@/store';
 import info from './views/info.vue';
 
 export default defineComponent({
@@ -19,12 +26,18 @@ export default defineComponent({
     info,
   },
   setup() {
-    const userInfo = reactive({});
-    getUserInfo().then(({ data }) => {
-      Object.assign(userInfo, data)
-    })
+    // onBeforeRouteUpdate((to, from, next) => {
+    //   const toDepth = to.path.split('/').length
+    //   const fromDepth = from.path.split('/').length
+    //   to.meta.transition = toDepth < fromDepth ? 'slide-right' : 'slide-left';
+    //   console.log(to.meta)
+    //   next();
+    // })
+    const store = useStore<State>();
+    store.dispatch('updateInfo');
+    store.dispatch('updateArticles');
     return {
-      userInfo,
+      userInfo: computed(() => store.state.userInfo),
     }
   }
 })
@@ -54,5 +67,16 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   /* margin-top: 60px; */
+}
+.page-enter-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.page-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.page-enter-active, .page-leave-active {
+  transition: all 1s linear;
 }
 </style>

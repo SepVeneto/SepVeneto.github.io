@@ -21,7 +21,8 @@ import 'github-markdown-css'
 
 export default defineComponent({
   name: 'ArticleDetail',
-  setup() {
+  emits: ['load'],
+  setup(props, context) {
     const route = useRoute();
     const { issuesNumber } = route.query;
     const article = ref({});
@@ -39,6 +40,7 @@ export default defineComponent({
         ...article.value,
         body: data,
       }
+      context.emit('load');
     })
     return {
       article,

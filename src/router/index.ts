@@ -3,8 +3,25 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/views/home.vue'),
-    // redirect: '/room',
+    // component: () => import('@/layout.vue'),
+    component: () => import('@/App.vue'),
+    redirect: '/list',
+    children: [
+      {
+        path: '/list',
+        component: () => import('@/views/home.vue'),
+        meta: {
+          transition: 'slide-left',
+        }
+      },
+      {
+        path: '/detail',
+        component: () => import('@/views/article.vue'),
+        meta: {
+          transition: 'slide-left',
+        }
+      },
+    ]
   },
   {
     path: '/room',
@@ -15,10 +32,6 @@ const routes: RouteRecordRaw[] = [
     path: '/room_origin',
     name: 'roomOrigin',
     component: () => import('@/views/room/origin.vue'),
-  },
-  {
-    path: '/detail',
-    component: () => import('@/views/article.vue'),
   },
   // {
   //   path:'/repositry/vue/bcTable',
