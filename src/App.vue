@@ -17,7 +17,6 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex';
-import { State } from '@/store';
 import info from './views/info.vue';
 
 export default defineComponent({
@@ -36,6 +35,7 @@ export default defineComponent({
     const store = useStore<State>();
     store.dispatch('updateInfo');
     store.dispatch('updateArticles');
+    store.dispatch('updateCategories');
     return {
       userInfo: computed(() => store.state.userInfo),
     }
@@ -50,7 +50,7 @@ export default defineComponent({
   row-gap: 20px;
   column-gap: 20px;
   padding: 0 20px;
-  width: 1440px;
+  max-width: 1440px;
   margin: 0 auto;
   .left-aside {
     display: grid;

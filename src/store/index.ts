@@ -1,16 +1,12 @@
 import { createStore } from 'vuex';
 import * as apis from '@/api';
 
-export type State = {
-  articles: Array<unknown>,
-  userInfo: Record<string, unknown>,
-}
-
 const store = createStore<State>({
   state() {
     return {
       userInfo: {},
       articles: [],
+      categories: [],
     }
   },
   mutations: {
@@ -19,6 +15,9 @@ const store = createStore<State>({
     },
     updateArticles(state, list) {
       state.articles = list;
+    },
+    updateCategories(state, data) {
+      state.categories = data;
     }
   },
   actions: {
@@ -31,6 +30,11 @@ const store = createStore<State>({
       apis.getRepo().then(data => {
         const list = data.data as [];
         context.commit('updateArticles', list);
+      })
+    },
+    updateCategories(context) {
+      apis.getCategories().then(({ data }) => {
+        context.commit('updateCategories', data);
       })
     }
   }

@@ -5,15 +5,16 @@
     </div>
     <div>{{ info.name }}</div>
     <div class="info-detail">
-      <div><span>文章</span><span>39</span></div>
-      <div><span>分类</span><span>9</span></div>
+      <div><span>文章</span><span>{{ articles }}</span></div>
+      <div><span>分类</span><span>{{ categories }}</span></div>
       <div><span>仓库</span><span>{{ info.public_repos }}</span></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex';
 
 export default defineComponent({
   props: {
@@ -24,12 +25,15 @@ export default defineComponent({
   },
   setup(props) {
     const info = ref({});
+    const store = useStore<State>();
     watch(() => props.data, (val) => {
       info.value = val;
     })
     // console.log(info)
     return {
       info,
+      articles: computed(() => store.state.articles.length),
+      categories: computed(() => store.state.categories.length),
     }
   },
 })

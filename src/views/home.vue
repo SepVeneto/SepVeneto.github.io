@@ -28,7 +28,13 @@
       </div>
       <div class="card">
         <div>相关工具</div>
-        <a href="//sepveneto.github.io/vue-tools/#/table" target="_blank">组件库</a>
+        <div class="tools">
+          <a
+            v-for="(item, index) in tools"
+            :key="index"
+            :href="item.url"
+          >{{ item.name }}</a>
+        </div>
       </div>
     </aside>
   </section>
@@ -39,7 +45,12 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { formatTime } from '@/utils/tools';
 import { useStore } from 'vuex';
-import { State } from '@/store';
+
+const tools = Object.freeze([
+  { url: '//sepveneto.github.io/vue-tools/#/table', name: '组件库' },
+  { url: '//sepveneto.github.io/apiGenerator/', name: '文件比对' },
+  { url: '//sepveneto.github.io/dynamic-form-making/', name: '动态表单' },
+]);
 
 export default defineComponent({
   name: 'Home',
@@ -64,6 +75,7 @@ export default defineComponent({
       })
     }
     return {
+      tools,
       articles,
       recent: recentArticles,
       handleClick,
@@ -75,6 +87,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.tools {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
 .label {
   color: #7a7a7a;
   padding: 10px 0;

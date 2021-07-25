@@ -12,6 +12,12 @@ html, body, ul, li {
 li {
   display: block;
 }
+
+a {
+  text-decoration: none;
+  color: #4089ef;
+}
+
 .container {
   display: flex;
   max-width: 1344px;

@@ -1,5 +1,8 @@
 import request from '@/utils/request';
 
+const OWNER = 'SepVeneto';
+const REPO = 'SepVeneto.github.io';
+
 export function getUserInfo() {
   return request({
     url: '/users/SepVeneto',
@@ -28,5 +31,12 @@ export function markdown2html(text: string) {
     data: {
       text,
     }
+  })
+}
+
+export function getCategories() {
+  return request({
+    url: `/repos/${OWNER}/${REPO}/labels`,
+    method: 'get',
   })
 }
