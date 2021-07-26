@@ -33,6 +33,7 @@
             v-for="(item, index) in tools"
             :key="index"
             :href="item.url"
+            target="_blank"
           >{{ item.name }}</a>
         </div>
       </div>

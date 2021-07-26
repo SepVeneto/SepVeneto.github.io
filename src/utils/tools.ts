@@ -15,7 +15,7 @@ export function formatTime(time: string | number): string {
   const stamp = new Date(time);
   const year = stamp.getFullYear();
   const month = stamp.getMonth() + 1;
-  const day = stamp.getDay();
+  const day = stamp.getDate();
   const hour = stamp.getHours();
   const minute = stamp.getMinutes();
   const second = stamp.getSeconds();
